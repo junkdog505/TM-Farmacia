@@ -71,6 +71,18 @@ th {
   background-color: #0062cc;
 }
 
+.boton-buscar {
+  background-color: #49bfe0; /* Color de fondo */
+  color: white; /* Color del texto */
+  border: none; /* Borde */
+  padding: 10px 20px; /* Espacio interior */
+  text-align: center; /* Alineación del texto */
+  text-decoration: none; /* Decoración del texto */
+  display: inline-block; /* Mostrar como bloque en línea */
+  font-size: 16px; /* Tamaño de fuente */
+  margin: 4px 2px; /* Margen */
+  cursor: pointer; /* Tipo de cursor */
+}
     </style>
 </head>
 <body>
@@ -97,10 +109,12 @@ th {
               </td>
               <td>blablabla</td>
               <td class="text-decoration">$10.00</td>
-              <td></td> <!-- Columna adicional para los botones -->
+              <td> </td> <!-- Columna adicional para los botones -->
             </tr>
           </tbody>
+          
         </table>
+        <button class="boton-buscar">Aceptar lo selecionado</button>
         <script>
           const decrementarBotones = document.querySelectorAll('.decrementar-cantidad');
           const incrementarBotones = document.querySelectorAll('.incrementar-cantidad');
