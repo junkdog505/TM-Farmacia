@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Factura</title>
+    <style>
+        body {
+  font-family: Arial, sans-serif;
+  background-color: #f7f7f7;
+  color: #333;
+  background-image: url('https://ordinaryfaith.net/wp-content/uploads/2016/03/Gray-plain-website-background.jpg');
+}
+
+.container {
+  margin: 0 auto;
+  max-width: 600px;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2 {
+  text-align: center;
+  margin-top: 0;
+}
+
+h2 {
+  font-size: 1.2em;
+  font-weight: normal;
+  margin-bottom: 30px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  border: 2px solid #ddd;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+.total {
+  font-weight: bold;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.primary {
+  color: #fff;
+  background-color: #007bff;
+  border-color: #007bff;
+  padding: 10px 15px;
+  border-radius: 5px;
+  text-decoration: none;
+  display: inline-block;
+  margin-top: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.primary:hover {
+  background-color: #0062cc;
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Factura</h1>
+        <h2>Cliente: Juan Perez</h2>
+        <h3>Fecha: 03/05/2022</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>impuesto</th>
+                    <th>Subtotal</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Computadoras</td>
+                    <td>2</td>
+                    <td>18%</td>
+                    <td class="text-decoration">$10.00</td>
+                    <td class="text-decoration">$20.00</td>
+                </tr>
+                <tr>
+                    <td>Chicle</td>
+                    <td>1</td>
+                    <td>18%</td>
+                    <td class="text-decoration">$15.00</td>
+                    <td class="text-decoration">$15.00</td>
+                </tr>
+                <tr>
+                    <td colspan="4" class="total">Total</td>
+                    <td class="text-decoration">$35.00</td>
+                </tr>
+            </tbody>
+        </table>
+        <p>Gracias por su compra</p>
+    </div>  
+</body>
+</html>

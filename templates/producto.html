@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Factura</title>
+    <style>
+        body {
+  font-family: Arial, sans-serif;
+  background-color: #f7f7f7;
+  color: #333;
+  background-image: url('https://ordinaryfaith.net/wp-content/uploads/2016/03/Gray-plain-website-background.jpg');
+}
+
+.container {
+  margin: 0 auto;
+  max-width: 600px;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2 {
+  text-align: center;
+  margin-top: 0;
+}
+
+h2 {
+  font-size: 1.2em;
+  font-weight: normal;
+  margin-bottom: 30px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  border: 2px solid #ddd;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+.total {
+  font-weight: bold;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.primary {
+  color: #fff;
+  background-color: #007bff;
+  border-color: #007bff;
+  padding: 10px 15px;
+  border-radius: 5px;
+  text-decoration: none;
+  display: inline-block;
+  margin-top: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.primary:hover {
+  background-color: #0062cc;
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Productos</h1>
+        <h2>Surcursal: BOTICA</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Cantidad</th>
+              <th>Descripción</th>
+              <th>Precio</th>
+              <th></th> <!-- Columna adicional para los botones -->
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Computadoras</td>
+              <td>
+                <button class="decrementar-cantidad">-</button>
+                <input type="number" min="0" max="10" value="1" class="cantidad-producto">
+                <button class="incrementar-cantidad">+</button>
+              </td>
+              <td>blablabla</td>
+              <td class="text-decoration">$10.00</td>
+              <td></td> <!-- Columna adicional para los botones -->
+            </tr>
+          </tbody>
+        </table>
+        <script>
+          const decrementarBotones = document.querySelectorAll('.decrementar-cantidad');
+          const incrementarBotones = document.querySelectorAll('.incrementar-cantidad');
+          const cantidades = document.querySelectorAll('.cantidad-producto');
+          
+          for (let i = 0; i < decrementarBotones.length; i++) {
+            decrementarBotones[i].addEventListener('click', function() {
+              const cantidad = parseInt(cantidades[i].value);
+              if (cantidad > 1) {
+                cantidades[i].value = cantidad - 1;
+              }
+            });
+          }
+          
+          for (let i = 0; i < incrementarBotones.length; i++) {
+            incrementarBotones[i].addEventListener('click', function() {
+              const cantidad = parseInt(cantidades[i].value);
+              if (cantidad < 10) {
+                cantidades[i].value = cantidad + 1;
+              }
+            });
+          }
+        </script>
+        
+    </div>
+</body>
+</html>
