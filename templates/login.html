@@ -17,10 +17,10 @@
 <div class="login-page">
   <div class="form">
     <h1>LOGIN</h1>
-    <form>
+    <form action="{{ url_for('ingresar_cliente') }}" method="POST">
       <lottie-player src="https://assets4.lottiefiles.com/datafiles/XRVoUu3IX4sGWtiC3MPpFnJvZNq7lVWDCa8LSqgS/profile.json"  background="transparent"  speed="1"  style="justify-content: center;" loop  autoplay></lottie-player>
-      <input type="text" placeholder="&#xf007;  username"/>
-      <input type="password" id="password" placeholder="&#xf023;  password"/>
+      <input type="email" name="email" placeholder="&#xf007;  E-mail"/>
+      <input type="password" name="contrasena" id="password" placeholder="&#xf023;  Contraseña"/>
       <i class="fas fa-eye" onclick="show()"></i> 
       <br>
       <br>

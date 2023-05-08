@@ -1,6 +1,11 @@
 # UCSM Farm
 Esta aplicación es el de una farmacia en el cual se le permite realizar las compras al usuario en las distintas sucursales de la empresa.
 ## Recursos Usados
+### PHP
+Se utilizó PHP para el lado de hacer consultas a la base de datos
+```
+sudo dnf install php php-cli php-common php-mysqlnd 
+```
 ### Python
 Se usó python la versión 3.11 en este proyecto junto con un entorno virtual llamado venv.
 

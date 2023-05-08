@@ -19,7 +19,7 @@
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
-h1, h2 {
+h1, h2, h3 {
   text-align: center;
   margin-top: 0;
 }
@@ -76,36 +76,31 @@ th {
 <body>
     <div class="container">
         <h1>Factura</h1>
-        <h2>Cliente: Juan Perez</h2>
-        <h3>Fecha: 03/05/2022</h3>
+        <h2>Cliente: {{ cliente }}</h2>
+        <h3>Fecha: {{ fecha }}</h3>
         <table>
             <thead>
                 <tr>
                     <th>Producto</th>
                     <th>Cantidad</th>
-                    <th>impuesto</th>
+                    <th>Impuesto</th>
                     <th>Subtotal</th>
                     <th>Total</th>
                 </tr>
             </thead>
             <tbody>
+                {% for producto in productos %}
                 <tr>
-                    <td>Computadoras</td>
-                    <td>2</td>
-                    <td>18%</td>
-                    <td class="text-decoration">$10.00</td>
-                    <td class="text-decoration">$20.00</td>
+                    <td>{{ producto.nombre }}</td>
+                    <td>{{ producto.cantidad }}</td>
+                    <td>{{ producto.impuesto }}</td>
+                    <td class="text-decoration">{{ producto.subtotal }}</td>
+                    <td class="text-decoration">{{ producto.total }}</td>
                 </tr>
-                <tr>
-                    <td>Chicle</td>
-                    <td>1</td>
-                    <td>18%</td>
-                    <td class="text-decoration">$15.00</td>
-                    <td class="text-decoration">$15.00</td>
-                </tr>
+                {% endfor %}
                 <tr>
                     <td colspan="4" class="total">Total</td>
-                    <td class="text-decoration">$35.00</td>
+                    <td class="text-decoration">{{ total }}</td>
                 </tr>
             </tbody>
         </table>

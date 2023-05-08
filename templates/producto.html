@@ -88,7 +88,8 @@ th {
 <body>
     <div class="container">
         <h1>Productos</h1>
-        <h2>Surcursal: BOTICA</h2>
+        <h2>Sucursal: {{ id_sucursal }}</h2>
+        <form method="POST"  id="formulario-productos"> <!-- action="{{ url_for('mostrar_factura') }}" -->
         <table>
           <thead>
             <tr>
@@ -99,46 +100,40 @@ th {
               <th></th> <!-- Columna adicional para los botones -->
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td>Computadoras</td>
-              <td>
-                <button class="decrementar-cantidad">-</button>
-                <input type="number" min="0" max="10" value="1" class="cantidad-producto">
-                <button class="incrementar-cantidad">+</button>
-              </td>
-              <td>blablabla</td>
-              <td class="text-decoration">$10.00</td>
-              <td> </td> <!-- Columna adicional para los botones -->
-            </tr>
-          </tbody>
-          
+<tbody>
+  {% for producto in productos %}
+  <tr>
+    <td>{{ producto[0] }}</td> <!-- Producto -->
+    <td>
+      <button class="decrementar-cantidad">-</button>
+      <input type="number" min="0" max="10" value="0" class="cantidad-producto">
+      <button class="incrementar-cantidad">+</button>
+    </td>
+    <td>{{ producto[1] }}</td> <!-- Descripción -->
+    <td class="text-decoration">{{ producto[2] }}</td> <!-- Precio -->
+    <td></td> <!-- Columna adicional para los botones -->
+  </tr>
+  {% endfor %}
+</tbody>
         </table>
-        <button class="boton-buscar">Aceptar lo selecionado</button>
+        <button class="boton-buscar" onclick="guardarProductos()">Aceptar lo seleccionado</button>
+        </form>
         <script>
-          const decrementarBotones = document.querySelectorAll('.decrementar-cantidad');
-          const incrementarBotones = document.querySelectorAll('.incrementar-cantidad');
-          const cantidades = document.querySelectorAll('.cantidad-producto');
-          
-          for (let i = 0; i < decrementarBotones.length; i++) {
-            decrementarBotones[i].addEventListener('click', function() {
-              const cantidad = parseInt(cantidades[i].value);
-              if (cantidad > 1) {
-                cantidades[i].value = cantidad - 1;
-              }
-            });
-          }
-          
-          for (let i = 0; i < incrementarBotones.length; i++) {
-            incrementarBotones[i].addEventListener('click', function() {
-              const cantidad = parseInt(cantidades[i].value);
-              if (cantidad < 10) {
-                cantidades[i].value = cantidad + 1;
-              }
-            });
-          }
+function incrementarCantidad(index) {
+    const cantidadElement = document.querySelector('.cantidad-producto-' + index);
+    const cantidad = parseInt(cantidadElement.value);
+    cantidadElement.value = cantidad + 1;
+}
+
+function decrementarCantidad(index) {
+    const cantidadElement = document.querySelector('.cantidad-producto-' + index);
+    const cantidad = parseInt(cantidadElement.value);
+    if (cantidad > 0) {
+        cantidadElement.value = cantidad - 1;
+    }
+
         </script>
-        
+
     </div>
 </body>
 </html>
