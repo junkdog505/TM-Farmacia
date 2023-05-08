@@ -93,25 +93,18 @@
                     <td>{{ producto.total }}</td>
                 </tr>
             {% endfor %}
-            {% set subtotal = 0 %}
-            {% for producto in productos_seleccionados %}
-                {% set subtotal = subtotal + producto.total %}
-            {% endfor %}
-
-            {% set impuesto = subtotal * 0.18 %}
-            {% set total = subtotal + impuesto %}
 
             <tr>
                 <td>Subtotal</td>
-                <td colspan="3" class="text-right">{{ subtotal }}</td>
+                <td colspan="3" class="text-right">{{ subtotal|float|round(2) }}</td>
             </tr>
             <tr>
                 <td>Impuesto (18%)</td>
-                <td colspan="3" class="text-right">{{ impuesto }}</td>
+                <td colspan="3" class="text-right">{{ impuesto|float|round(2) }}</td>
             </tr>
             <tr>
                 <td>Total</td>
-                <td colspan="3" class="text-right">{{ total }}</td>
+                <td colspan="3" class="text-right">{{ total|float|round(2) }}</td>
             </tr>
 
         </tbody>

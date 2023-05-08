@@ -1,8 +1,9 @@
-from flask import Flask, render_template, request, flash, redirect, url_for
+from flask import Flask, render_template, request, flash, url_for, redirect
 import pymysql, re
 from datetime import datetime
+from decimal import Decimal
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static')
 app.secret_key = 'bestteam'
 
 
@@ -15,6 +16,29 @@ def connect():
         port=3306
     )
 
+
+
+
+
+@app.route('/', methods=['GET', 'POST'])
+def login():
+    connection = connect()
+    cursor = connection.cursor()
+
+    if request.method == 'POST':
+        correo = request.form['email']
+        contrasena = request.form['contrasena']
+
+        query = "SELECT * FROM Cliente WHERE Correo = %s AND Contrasena = %s"
+        values = (correo, contrasena)
+        cursor.execute(query, values)
+
+        result = cursor.fetchone()
+
+        cursor.close()
+        connection.close()
+
+    return render_template('login.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def ingresar_cliente():
@@ -141,6 +165,7 @@ def mostrar_factura():
         cursor = conn.cursor()
 
         productos_seleccionados = []
+        subtotal = 0  # Variable para almacenar el subtotal
         for key, value in request.form.items():
             if key.startswith('cantidad_'):
                 producto_id = key.split('_')[1]
@@ -152,21 +177,27 @@ def mostrar_factura():
                     cursor.execute(query, (producto_id,))
                     producto = cursor.fetchone()
 
+                    # Calcular el importe del producto y agregarlo al subtotal
+                    importe = Decimal(cantidad) * producto[1]
+                    subtotal += importe
 
                     # Agregar el producto y la cantidad a la lista de productos seleccionados
                     productos_seleccionados.append({
                         'nombre': producto[0],
                         'cantidad': cantidad,
                         'precio_unitario': producto[1],
-                        'total': float(cantidad * producto[1])
+                        'total': float(importe)
                     })
         cursor.close()
         conn.close()
-
+        # Calcular impuesto y total
+        impuesto = subtotal * Decimal('0.18')
+        total = subtotal + impuesto
 
         # Renderizar la plantilla factura.html y pasar los datos seleccionados
         return render_template('factura.html', productos_seleccionados=productos_seleccionados,
-                               fecha_actual=fecha_actual, hora_actual=hora_actual)
+                               fecha_actual=fecha_actual, hora_actual=hora_actual,
+                               subtotal=subtotal, impuesto=impuesto, total=total)
 
 
 if __name__ == '__main__':
