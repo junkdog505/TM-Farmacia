@@ -5,106 +5,118 @@
     <title>Factura</title>
     <style>
         body {
-  font-family: Arial, sans-serif;
-  background-color: #f7f7f7;
-  color: #333;
-  background-image: url('https://ordinaryfaith.net/wp-content/uploads/2016/03/Gray-plain-website-background.jpg');
-}
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            color: #333;
+        }
 
-.container {
-  margin: 0 auto;
-  max-width: 600px;
-  padding: 20px;
-  background-color: #fff;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-}
+        .container {
+            margin: 0 auto;
+            max-width: 600px;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
 
-h1, h2, h3 {
-  text-align: center;
-  margin-top: 0;
-}
+        h1, h2 {
+            text-align: center;
+            margin-top: 0;
+        }
 
-h2 {
-  font-size: 1.2em;
-  font-weight: normal;
-  margin-bottom: 30px;
-}
+        h2 {
+            font-size: 1.2em;
+            font-weight: normal;
+            margin-bottom: 30px;
+        }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 20px;
-  border: 2px solid #ddd;
-}
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            border: 2px solid #ddd;
+        }
 
-th, td {
-  padding: 10px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
-}
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
 
-th {
-  background-color: #f2f2f2;
-}
+        th {
+            background-color: #f2f2f2;
+        }
 
-.total {
-  font-weight: bold;
-}
+        .total {
+            font-weight: bold;
+        }
 
-.text-right {
-  text-align: right;
-}
+        .text-right {
+            text-align: right;
+        }
 
-.primary {
-  color: #fff;
-  background-color: #007bff;
-  border-color: #007bff;
-  padding: 10px 15px;
-  border-radius: 5px;
-  text-decoration: none;
-  display: inline-block;
-  margin-top: 20px;
-  transition: background-color 0.3s ease;
-}
+        .primary {
+            color: #fff;
+            background-color: #007bff;
+            border-color: #007bff;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
 
-.primary:hover {
-  background-color: #0062cc;
-}
-
+        .primary:hover {
+            background-color: #0062cc;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Factura</h1>
-        <h2>Cliente: {{ cliente }}</h2>
-        <h3>Fecha: {{ fecha }}</h3>
+        <h3>Fecha: {{ fecha_actual }}   {{ hora_actual }}</h3>
         <table>
             <thead>
                 <tr>
                     <th>Producto</th>
                     <th>Cantidad</th>
-                    <th>Impuesto</th>
-                    <th>Subtotal</th>
-                    <th>Total</th>
+                    <th>Precio unitario</th>
+                    <th>Importe</th>
                 </tr>
             </thead>
             <tbody>
-                {% for producto in productos %}
+            {% for producto in productos_seleccionados %}
                 <tr>
                     <td>{{ producto.nombre }}</td>
                     <td>{{ producto.cantidad }}</td>
-                    <td>{{ producto.impuesto }}</td>
-                    <td class="text-decoration">{{ producto.subtotal }}</td>
-                    <td class="text-decoration">{{ producto.total }}</td>
+                    <td>{{ producto.precio_unitario }}</td>
+                    <td>{{ producto.total }}</td>
                 </tr>
-                {% endfor %}
-                <tr>
-                    <td colspan="4" class="total">Total</td>
-                    <td class="text-decoration">{{ total }}</td>
-                </tr>
-            </tbody>
+            {% endfor %}
+            {% set subtotal = 0 %}
+            {% for producto in productos_seleccionados %}
+                {% set subtotal = subtotal + producto.total %}
+            {% endfor %}
+
+            {% set impuesto = subtotal * 0.18 %}
+            {% set total = subtotal + impuesto %}
+
+            <tr>
+                <td>Subtotal</td>
+                <td colspan="3" class="text-right">{{ subtotal }}</td>
+            </tr>
+            <tr>
+                <td>Impuesto (18%)</td>
+                <td colspan="3" class="text-right">{{ impuesto }}</td>
+            </tr>
+            <tr>
+                <td>Total</td>
+                <td colspan="3" class="text-right">{{ total }}</td>
+            </tr>
+
+        </tbody>
         </table>
         <p>Gracias por su compra</p>
-    </div>  
+    </div>
 </body>
 </html>

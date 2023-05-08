@@ -52,6 +52,7 @@
 <body>
     <div class="container">
         <h1>Menú</h1>
+        <form method="POST" action="{{ url_for('mostrar_factura') }}">
         <ul>
             {% for sucursal in sucursales %}
             <li>
@@ -59,6 +60,8 @@
             </li>
             {% endfor %}
         </ul>
+        </form>
     </div>
+
 </body>
 </html>

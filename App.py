@@ -1,16 +1,15 @@
 from flask import Flask, render_template, request, flash, redirect, url_for
-import pymysql
+import pymysql, re
 from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = 'bestteam'
 
 
-
 def connect():
     return pymysql.connect(
         host='localhost',
-        password='',
+        password='Nomad18*',
         user='root',
         db='farmacia',
         port=3306
@@ -58,7 +57,21 @@ def registrar_cliente():
         Correo = request.form['email']
         Contrasena = request.form['contrasena']
 
-        # Aquí puedes agregar patrones para verificar la veracidad de los datos ingresados
+        # Verificar que el correo no exista en la tabla Cliente
+        query = "SELECT Correo FROM Cliente WHERE Correo = %s"
+        cursor.execute(query, (Correo,))
+        correo_existente = cursor.fetchone()
+
+        if correo_existente:
+            flash('El correo electrónico ya se encuentra registrado.', 'error')
+            return redirect(url_for('registrar_cliente'))
+        if len(Contrasena) < 8:
+            flash('La contraseña debe tener al menos 8 caracteres')
+            return redirect('/registro')
+        if not re.search(r'[A-Za-z]', Contrasena) or not re.search(r'[0-9]', Contrasena) or not re.search(
+                r'[!@#$%^&*()_+]', Contrasena):
+            flash('La contraseña debe contener letras, números y caracteres especiales')
+            return redirect('/registro')
 
         # Insertar el nuevo usuario en la tabla Cliente
         query = "INSERT INTO Cliente (Nombre, Direccion, Telefono, Correo, Contrasena) VALUES (%s, %s, %s, %s, %s)"
@@ -69,6 +82,7 @@ def registrar_cliente():
         cursor.close()
         connection.close()
 
+        flash('Registro exitoso. Por favor inicia sesión.', 'success')
         return redirect('/login')
     return render_template('registro.html')
 
@@ -94,10 +108,17 @@ def mostrar_menu():
 def mostrar_productos():
     conn = connect()
     cursor = conn.cursor()
+
     id_sucursal = request.args.get('IdSucursal')  # Obtener el ID de la sucursal seleccionada desde la URL
 
+    # Obtener el nombre de la sucursal
+    query_sucursal = "SELECT Ubicacion FROM Sucursal WHERE IdSucursal = %s"
+    cursor.execute(query_sucursal, (id_sucursal,))
+    nombre_sucursal = cursor.fetchone()[0]
+
     # Ejecutar la consulta para obtener los productos de la sucursal seleccionada
-    query = "SELECT p.Nombre, p.Descripcion, p.Precio FROM Producto p INNER JOIN Inventario i ON p.IdProducto = i.IdProducto WHERE i.IdSucursal = %s";
+    query = "SELECT p.Nombre, p.Descripcion, p.Precio FROM Producto p INNER JOIN Inventario i ON p.IdProducto = " \
+            "i.IdProducto WHERE i.IdSucursal = %s"
     cursor.execute(query, (id_sucursal,))
 
     # Obtener los resultados de la consulta
@@ -107,43 +128,45 @@ def mostrar_productos():
     cursor.close()
     conn.close()
 
-    # Pasar los productos a la plantilla de productos para mostrarlos en la página
-    return render_template('producto.html', productos=productos, id_sucursal=id_sucursal)
+    # Pasar los productos y el nombre de la sucursal a la plantilla de productos para mostrarlos en la página
+    return render_template('producto.html', productos=productos, nombre_sucursal=nombre_sucursal)
 
 
 @app.route('/factura', methods=['GET', 'POST'])
 def mostrar_factura():
-    # Obtener los datos del formulario
-    cliente = request.form.get('cliente')
-    fecha = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    productos = []
+    if request.method == 'POST':
+        fecha_actual = datetime.now().strftime('%d/%m/%Y')
+        hora_actual = datetime.now().strftime('%H:%M')
+        conn = connect()
+        cursor = conn.cursor()
 
-    # Recorrer los productos seleccionados del formulario
-    for i in range(1, 6):
-        producto_id = request.form.get('producto{}'.format(i))
-        cantidad = int(request.form.get('cantidad{}'.format(i)))
-        precio = float(request.form.get('precio{}'.format(i)))
+        productos_seleccionados = []
+        for key, value in request.form.items():
+            if key.startswith('cantidad_'):
+                producto_id = key.split('_')[1]
+                cantidad = int(value)
+                if cantidad > 0:
+                    # Obtener los datos del producto desde la base de datos
 
-        # Calcular subtotal y total
-        subtotal = cantidad * precio
-        impuesto = subtotal * 0.13
-        total = subtotal + impuesto
+                    query = "SELECT p.Nombre, p.Precio FROM Producto p WHERE p.IdProducto = %s"
+                    cursor.execute(query, (producto_id,))
+                    producto = cursor.fetchone()
 
-        # Agregar producto a la lista de productos
-        producto = {
-            'nombre': producto_id,
-            'cantidad': cantidad,
-            'impuesto': impuesto,
-            'subtotal': subtotal,
-            'total': total
-        }
-        productos.append(producto)
 
-    # Calcular el total de la factura
-    total_factura = sum([producto['total'] for producto in productos])
+                    # Agregar el producto y la cantidad a la lista de productos seleccionados
+                    productos_seleccionados.append({
+                        'nombre': producto[0],
+                        'cantidad': cantidad,
+                        'precio_unitario': producto[1],
+                        'total': float(cantidad * producto[1])
+                    })
+        cursor.close()
+        conn.close()
 
-    # Pasar los datos a la plantilla de factura para mostrarlos
-    return render_template('factura.html', cliente=cliente, fecha=fecha, productos=productos, total=total_factura)
+
+        # Renderizar la plantilla factura.html y pasar los datos seleccionados
+        return render_template('factura.html', productos_seleccionados=productos_seleccionados,
+                               fecha_actual=fecha_actual, hora_actual=hora_actual)
 
 
 if __name__ == '__main__':

@@ -88,52 +88,64 @@ th {
 <body>
     <div class="container">
         <h1>Productos</h1>
-        <h2>Sucursal: {{ id_sucursal }}</h2>
-        <form method="POST"  id="formulario-productos"> <!-- action="{{ url_for('mostrar_factura') }}" -->
-        <table>
-          <thead>
-            <tr>
-              <th>Producto</th>
-              <th>Cantidad</th>
-              <th>Descripción</th>
-              <th>Precio</th>
-              <th></th> <!-- Columna adicional para los botones -->
-            </tr>
-          </thead>
-<tbody>
-  {% for producto in productos %}
-  <tr>
-    <td>{{ producto[0] }}</td> <!-- Producto -->
-    <td>
-      <button class="decrementar-cantidad">-</button>
-      <input type="number" min="0" max="10" value="0" class="cantidad-producto">
-      <button class="incrementar-cantidad">+</button>
-    </td>
-    <td>{{ producto[1] }}</td> <!-- Descripción -->
-    <td class="text-decoration">{{ producto[2] }}</td> <!-- Precio -->
-    <td></td> <!-- Columna adicional para los botones -->
-  </tr>
-  {% endfor %}
-</tbody>
-        </table>
-        <button class="boton-buscar" onclick="guardarProductos()">Aceptar lo seleccionado</button>
+        <h2>Sucursal: {{ nombre_sucursal }}</h2>
+        <form id="formulario-productos" action="{{ url_for('mostrar_factura') }}" method="POST">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Descripción</th>
+                        <th>Precio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for producto in productos %}
+                    <tr>
+                        <td>{{ producto[0] }}</td> <!-- Producto -->
+                        <td>
+                            <button class="decrementar-cantidad" type="button">-</button>
+                            <input type="number" min="0" max="10" value="0" class="cantidad-producto" name="cantidad_{{ loop.index }}">
+                            <button class="incrementar-cantidad" type="button">+</button>
+                        </td>
+                        <td>{{ producto[1] }}</td> <!-- Descripción -->
+                        <td>{{ producto[2] }}</td> <!-- Precio -->
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <button class="boton-buscar" type="submit">Generar Factura</button>
         </form>
-        <script>
-function incrementarCantidad(index) {
-    const cantidadElement = document.querySelector('.cantidad-producto-' + index);
-    const cantidad = parseInt(cantidadElement.value);
-    cantidadElement.value = cantidad + 1;
-}
-
-function decrementarCantidad(index) {
-    const cantidadElement = document.querySelector('.cantidad-producto-' + index);
-    const cantidad = parseInt(cantidadElement.value);
-    if (cantidad > 0) {
-        cantidadElement.value = cantidad - 1;
-    }
-
-        </script>
-
     </div>
 </body>
+ <script>
+            const decrementarBotones = document.querySelectorAll('.decrementar-cantidad');
+            const incrementarBotones = document.querySelectorAll('.incrementar-cantidad');
+            const cantidades = document.querySelectorAll('.cantidad-producto');
+
+            for (let i = 0; i < decrementarBotones.length; i++) {
+                decrementarBotones[i].addEventListener('click', function () {
+                    const cantidad = parseInt(cantidades[i].value);
+                    if (cantidad > 0) {
+                        cantidades[i].value = cantidad - 1;
+                    }
+                });
+            }
+
+            for (let i = 0; i < incrementarBotones.length; i++) {
+                incrementarBotones[i].addEventListener('click', function () {
+                    const cantidad = parseInt(cantidades[i].value);
+                    if (cantidad < 10) {
+                        cantidades[i].value = cantidad + 1;
+                    }
+                });
+            }
+
+            function guardarProductos() {
+                const formulario = document.getElementById('formulario-productos');
+                formulario.action = "{{ url_for('mostrar_factura') }}";
+                formulario.method = "POST";
+                formulario.submit();
+            }
+        </script>
 </html>
