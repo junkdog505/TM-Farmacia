@@ -10,35 +10,15 @@ app.secret_key = 'bestteam'
 def connect():
     return pymysql.connect(
         host='localhost',
-        password='Nomad18*',
+        password='',
         user='root',
         db='farmacia',
         port=3306
     )
 
-
-
-
-
-@app.route('/', methods=['GET', 'POST'])
-def login():
-    connection = connect()
-    cursor = connection.cursor()
-
-    if request.method == 'POST':
-        correo = request.form['email']
-        contrasena = request.form['contrasena']
-
-        query = "SELECT * FROM Cliente WHERE Correo = %s AND Contrasena = %s"
-        values = (correo, contrasena)
-        cursor.execute(query, values)
-
-        result = cursor.fetchone()
-
-        cursor.close()
-        connection.close()
-
-    return render_template('login.html')
+@app.route('/')
+def inicio():
+    return render_template('inicio.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def ingresar_cliente():

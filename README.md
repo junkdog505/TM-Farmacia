@@ -1,11 +1,7 @@
-# UCSM Farm
+# UCSM Farma
 Esta aplicación es el de una farmacia en el cual se le permite realizar las compras al usuario en las distintas sucursales de la empresa.
 ## Recursos Usados
-### PHP
-Se utilizó PHP para el lado de hacer consultas a la base de datos
-```
-sudo dnf install php php-cli php-common php-mysqlnd 
-```
+
 ### Python
 Se usó python la versión 3.11 en este proyecto junto con un entorno virtual llamado venv.
 
@@ -29,8 +25,29 @@ source venv/bin/activate
 Las librerias de pip usadas fueron:
 
 ``` python
-pip install flask
-pip install flask-mysqldb
+pip install flask flask-mysqldb datetime pymysql 
+pip list 
+=========================
+blinker        1.6.2    =
+cffi           1.15.1   =
+click          8.1.3    =
+cryptography   40.0.2   =
+DateTime       5.1      =
+Flask          2.3.2    =
+Flask-MySQLdb  1.0.1    =
+itsdangerous   2.1.2    =   
+Jinja2         3.1.2    =
+MarkupSafe     2.1.2    =
+mysqlclient    2.1.1    =
+pip            23.1.2   =
+pycparser      2.21     =
+PyMySQL        1.0.3    =
+pytz           2023.3   =
+setuptools     65.5.1   =
+Werkzeug       2.3.3    =
+wheel          0.38.4   =
+zope.interface 6.0      =
+=========================
 ```
 ### Framework
 Se usó el framework de python llamado FLASK por su fácil accesibilidad y manejo para realizar backend y front end.
